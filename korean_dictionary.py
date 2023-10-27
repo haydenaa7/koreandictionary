@@ -1,11 +1,8 @@
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from textblob import TextBlob
 import time
 import sys
-
-QUESTIONS = ["what is", "what does"]
 
 def get_definition(query):
     url = "http://en.dict.naver.com/#/search?query=" + query.replace(" ", "+")
@@ -42,22 +39,12 @@ def get_definition(query):
         # If successful return reply string with definitions list
         return "According to the Naver English-Korean Dictionary...\n\nDefinitions for " + query + "\n" + "\n".join(definitions) 
     except:
-        return
-
-
-def process_submission(submission):
-    normalized_title = submission.title.lower()
-    for question in QUESTIONS:
-        if question in normalized_title:
-            split_title = normalized_title.split()
-            phrase = split_title[split_title.index(question.split()[0])]
-            if TextBlob(phrase).detect_language() == "u'kr'":
-                definition = get_definition(phrase)
-                if definition is None:
-                    return
+        return "Invalid word."
 
 def main():
-    print(get_definition(sys.argv[1]))
+    user_input = input("Please enter a Korean word to translate or 'quit' to quit: ")
+    while user_input != "quit":
+        print(get_definition(user_input))
 
 if __name__ == "__main__":
     main()
